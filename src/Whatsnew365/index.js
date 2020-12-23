@@ -1,16 +1,11 @@
-const express = require('express')
-const bodyParser = require('body-parser')
+import app from './app'
+import config from './config'
 
-const app = express()
+function main(){
+    app.listen(config.PORT, () => {
+        console.log(`App listening on port ${config.PORT}`)
+    })
+}
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+main() 
 
-
-app.get('/', (req, res) => {
-    res.send("Hello")
-})
-
-app.listen(3000, () => {
-    console.log("App listening on port 3000")
-})
