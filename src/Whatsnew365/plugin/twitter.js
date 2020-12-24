@@ -83,6 +83,7 @@ async function start_stream() {
         try {
             const parsed_data = JSON.parse(data)
             console.log(parsed_data)
+            //socket.destroy()
         } catch (e) {
             // Keep alive signal received. Do nothing.
         }
