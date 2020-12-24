@@ -1,20 +1,12 @@
-const axios = require('axios')
+import axios from 'axios'
+import config from './config'
 
-require('dotenv').config()
+let { token, rules_url, stream_url, basic_rule, too_basic_rule} = config
 
-const rulesURL = "https://api.twitter.com/2/tweets/search/stream/rules"
-const streamURL = `https://api.twitter.com/2/tweets/search/stream?tweet.fields=author_id,created_at,public_metrics&expansions=author_id,geo.place_id`
-const token = process.env.TOKEN
-
-const rules = [
-    { 'value': 'dog has:images -is:retweet', 'tag': 'dog pictures' },
-    { 'value': 'cat has:images -grumpy', 'tag': 'cat pictures' },
-]
-
-async function getRules() {
+async function get_rules() {
     const response = await axios({
-        method: 'get', 
-        url: rulesURL,
+        method: 'get',
+        url: rules_url,
         headers: {
             "Authorization": `Bearer ${token}`
         }
@@ -23,14 +15,15 @@ async function getRules() {
     return response.data
 }
 
-async function setRules(rules) {
+
+async function set_rules(rules) {
     const data = {
         "add": rules
     }
 
     const response = await axios({
-        method: 'post', 
-        url: rulesURL,
+        method: 'post',
+        url: rules_url,
         data: data,
         headers: {
             "content-type": "application/json",
@@ -41,20 +34,25 @@ async function setRules(rules) {
     return response.data
 }
 
-async function deleteRules(rules) {
+
+async function delete_rules(rules) {
     if (rules == undefined || rules.data == undefined) {
         return
     }
+
+    // get all ids of the rules currently in effect
     const ids = rules.data.map((data) => data.id)
+    // construct the data for the body request
     const data = {
         "delete": {
             "ids": ids
         }
     }
 
+    // send the request
     await axios({
-        method: "post", 
-        url: rulesURL,
+        method: "post",
+        url: rules_url,
         data: data,
         headers: {
             "content-type": "application/json",
@@ -63,32 +61,62 @@ async function deleteRules(rules) {
     })
 }
 
-async function streamConnect() {
 
-    const stream = await axios.get(streamURL, {
+async function delete_all_rules() {
+    let rules = await get_rules()
+    await delete_rules(rules)
+}
+
+
+async function start_stream() {
+    const stream = await axios.get(stream_url, {
         headers: {
             Authorization: `Bearer ${token}`
-        }, 
+        },
         responseType: "stream"
     })
 
-    const socket = stream.data 
+    // get stream socket instance
+    const socket = stream.data
     socket.on('data', data => {
-        const json = JSON.parse(data)
-        console.log(json)
-        socket.destroy()
-    });
+        try {
+            const parsed_data = JSON.parse(data)
+            console.log(parsed_data)
+        } catch (e) {
+            // Keep alive signal received. Do nothing.
+        }
+    })
 
     return stream
 }
 
 
-(async () => {
-    try {
-        await setRules(rules)
-    } catch (e) {
-        console.error(e)
-    }
+// (async () => {
+//     await delete_all_rules()
+//     let rules = await get_rules()
+//     console.log("Rules", rules)
 
-    const filteredStream = streamConnect()
-})();
+//     let new_rules = [
+//         { "value": "premier league " + basic_rule, "tag": "premier league" }
+//     ]
+
+//     // let new_rules = [
+//     //     { "value": "cat has:images", "tag": "cats with images" }
+//     // ]
+
+//     await set_rules(new_rules)
+//     rules = await get_rules()
+//     console.log("New Rules", rules)
+// })()
+
+(async () => {
+    let stream = start_stream()
+})()
+
+
+
+
+
+
+
+
