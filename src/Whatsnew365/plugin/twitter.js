@@ -3,6 +3,7 @@ import config from './config'
 
 let { token, rules_url, stream_url, basic_rule, too_basic_rule} = config
 
+
 async function get_rules() {
     const response = await axios({
         method: 'get',
