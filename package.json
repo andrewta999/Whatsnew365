@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src\\Whatsnew365\\index.js",
     "dev": "nodemon --exec babel-node src\\Whatsnew365\\index.js",
+    "devt": "npx babel-node src\\Whatsnew365\\plugin\\twitter.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
