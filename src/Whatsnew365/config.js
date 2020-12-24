@@ -1,6 +1,5 @@
 let config = {
-    PORT: 3000,
-    TOKEN: 'AAAAAAAAAAAAAAAAAAAAAA3gKAEAAAAA2dnq%2FUwjaVlGLljIsBUh2NsnXOI%3DGdVALMVwklumsOUJHgpHw6JhGvhdNzrLTLODYMW7mUTCfBLZ6l'
+    PORT: 3000
 }
 
 export default config 
