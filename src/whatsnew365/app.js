@@ -1,19 +1,21 @@
 import express from 'express'
-import cors from 'cors'
-import bodyParser from 'body-parser'
+import { createServer } from "http"
+import { Server } from "socket.io"
 
-import stream_router from './route/index'
-
+// initialize an express instance, 
+// a http instance for socket.io, 
+// and an io instance that allows cors
 const app = express()
-
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use('/api', stream_router)
-
-app.get('/', (req, res) => {
-    res.send("Hello")
+const server = createServer(app)
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+    }
 })
 
-export default app 
+// "connection" event handler
+io.on("connection", (socket) => {
+    socket.emit("connected", "You are connected. Hooray!!!")
+})
+
+export { app, server, io } 

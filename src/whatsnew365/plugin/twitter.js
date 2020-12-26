@@ -1,5 +1,6 @@
 import axios from 'axios'
 import config from './config'
+import {io} from '../app'
 
 let { token, rules_url, stream_url, basic_rule, too_basic_rule} = config
 
@@ -105,6 +106,9 @@ async function start_stream() {
     socket.on('data', data => {
         try {
             const parsed_data = JSON.parse(data)
+            if (parsed_data.data){
+                io.emit("new tweet", parsed_data)
+            }
             console.log(parsed_data)
             //socket.destroy()
         } catch (e) {
