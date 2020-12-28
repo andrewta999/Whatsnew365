@@ -1,10 +1,24 @@
 import React from "react"
 
+function get_button_properties(check, true_string, false_string){
+    let stream_button_class 
+    let stream_button_text 
+    if (check){
+        stream_button_class="btn btn-danger"
+        stream_button_text=true_string
+    }else{
+        stream_button_class="btn btn-success"
+        stream_button_text=false_string
+    }
+    return [stream_button_class, stream_button_text]
+}
+
 export default function NavBar(props) {
     let { new_rule, sample_options, 
           sample_chose, text_input_change, 
-          is_streaming,
-          toggle_streaming_status} = props
+          is_streaming, is_connected,
+          toggle_streaming_status, 
+          add_new_rule} = props
 
     let sample_options_component = sample_options.map((sample) => {
         return <option key={sample}>
@@ -12,15 +26,9 @@ export default function NavBar(props) {
         </option>
     })
 
-    let stream_button_class 
-    let stream_button_text 
-    if (is_streaming){
-        stream_button_class="btn btn-danger"
-        stream_button_text="Stop Stream"
-    }else{
-        stream_button_class="btn btn-success"
-        stream_button_text="Stream Tweet"
-    }
+    let [stream_button_class, stream_button_text] = get_button_properties(is_streaming, "Stop Stream", "Start Stream") 
+    let [status_button_class, status_button_text] = get_button_properties(!is_connected, "Disconnected", "Connected")
+
 
     return <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -62,7 +70,9 @@ export default function NavBar(props) {
                     </div>
 
                     <div className="input-group-append">
-                        <button className="btn btn-info" type="button">Add</button>
+                        <button className="btn btn-info" 
+                            type="button"
+                            onClick={add_new_rule}>Add</button>
                     </div>
 
                     <div className="input-group-append">
@@ -73,7 +83,7 @@ export default function NavBar(props) {
             </form>
 
             <div>
-                <button className="btn btn-success">Connected</button>
+                <button className={status_button_class}>{status_button_text}</button>
             </div>
 
         </nav>
