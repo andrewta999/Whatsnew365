@@ -6,7 +6,7 @@ For example, if I want to see what is currently happening on Twitter about the P
 
 ![Demo](https://github.com/andrewta999/Whatsnew365/blob/master/whatsnew365.png)
 
-### Development
+## Development
 
 A block of code looks like this
 ```javascript
@@ -21,7 +21,7 @@ let tweet_list = tweets.map((tweet, index) => {
 
 2. Clone the repository and cd into it
 
-#### Backend
+### Backend
 
 3. Run this command to install all the dependencies
 ```
@@ -47,6 +47,6 @@ npm install
 npm start
 ```
 
-### License
+## License
 
 This project is licensed by the MIT license.
